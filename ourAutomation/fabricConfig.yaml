@@ -29,7 +29,7 @@ organizations:
 - id: 1
   name: carrier
   orderer: supplychain
-  numberOfPeers: 2 #if 0 then endorser should be false 
+  numberOfPeers: 1 #if 0 then endorser should be false 
   endorser: true #if false then numberOfPeers should be 0 (even if not, the script will count it as 0)
 
 - id: 2
@@ -39,17 +39,9 @@ organizations:
   endorser: true
 
 
-
-
-- id: 3
-  name: buyer
-  orderer: supplychain
-  numberOfPeers: 4
-  endorser: true
-
 - id: 4
   name: supplychain
   orderer: supplychain
-  numberOfPeers: 1
+  numberOfPeers: 2
   endorser: false
 
