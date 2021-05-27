@@ -1328,6 +1328,11 @@ def generate():
         try:
             gitopsConfig = yaml.safe_load(stream)
 
+            endorsersBooleanList= []
+            ordererOwnershipList= []
+            ordererOwners= []
+            peerCounts= []
+            orgNames= []
             BAFgit_protocol = gitopsConfig["BAFgitops"]["git_protocol"]
             BAFgit_url = gitopsConfig["BAFgitops"]["git_url"]
             BAFgitbranch = gitopsConfig["BAFgitops"]["branch"]
