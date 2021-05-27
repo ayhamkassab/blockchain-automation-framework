@@ -26,6 +26,9 @@ organizations:
   numberOfPeers: 1
   endorser: true
 
+
+
+
 - id: 3
   name: buyer
   orderer: supplychain
@@ -37,3 +40,4 @@ organizations:
   orderer: supplychain
   numberOfPeers: 3
   endorser: false
+

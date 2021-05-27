@@ -20,10 +20,10 @@ with open("fabricConfig.yaml", 'r') as stream:
             endorsersBooleanList.append(listOfOrgs[org]["endorser"])
         #orderersCount=(len([idx for idx in range(len(ordererOwnershipList)) if ordererOwnershipList[idx] == True]))
         orderersCount = len(np.unique(ordererOwnershipList))
-        #print(ordererOwnershipList, orderersCount)
+        print(ordererOwnershipList, orderersCount)
         domainName = fabricConfig["domain_name"]#"svc.cluster.local"
         endorsersList=([orgNames[idx] for idx in range(len(endorsersBooleanList)) if endorsersBooleanList[idx] == True])
-        #print(endorsersList, endorsersBooleanList)
+        print(endorsersList, endorsersBooleanList)
 
         BAFk8sContext = fabricConfig["BAFk8s"]["context"]
         BAFk8sConfig_file = fabricConfig["BAFk8s"]["config_file"]

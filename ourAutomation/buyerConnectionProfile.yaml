@@ -3,7 +3,7 @@ organizations:
     peers:
     - peer0.buyer-net
     orderers:
-    - orderer2.supplychain-net
+    - orderer1.supplychain-net
     certificateAuthorities:
     - ca.buyer-net
     mspid: buyerMSP
@@ -13,8 +13,8 @@ peers:
     tlsCACerts:
       path: secret/buyer/msp/tlscacerts/tlsca.pem
 orderers:
-  orderer2.supplychain-net:
-    url: grpcs://orderer2.supplychain-net:7050
+  orderer1.supplychain-net:
+    url: grpcs://orderer1.supplychain-net:7050
     tlsCACerts:
       path: secret/buyer/msp/tlscacerts/orderer-tlsca.pem
 name: test-network-carrier-net
@@ -45,5 +45,5 @@ channels:
         discover: true
         ledgerQuery: true
     orderers:
-    - orderer2.supplychain-net
+    - orderer1.supplychain-net
 version: 1.0.0

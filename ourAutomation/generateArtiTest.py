@@ -674,7 +674,7 @@ def getCaliperNetworkConfig(domainName, orgsCount, orderersCount, chaincodeName,
 
 
     caliperConfig["organizations"] = genCaliperOrganizations(domainName, orgsCount, orderersCount, peerCounts, endorsersList)
-    print("caliperNetworkConfig.yaml")
+
     fHandle = open("caliperNetworkConfig.yaml", "w")
     stream = yaml.dump(caliperConfig, default_flow_style = False, sort_keys=False)
     fHandle.write(stream.replace("'", ""))
@@ -996,7 +996,7 @@ def getCaliperConnectionProfile(domainName, orgsCount, orderersCount, chaincodeN
     #caliperConfig["clients"] = genCaliperClients(domainName, orgsCount, orderersCount, peerCounts)
 
 
-    print("{}ConnectionProfile.yaml".format(org))
+
     fHandle = open("{}ConnectionProfile.yaml".format(org), "w")
     stream = yaml.dump(caliperConnectionProfile, default_flow_style = False, sort_keys=False)
     fHandle.write(stream.replace("'", ""))
@@ -1238,7 +1238,7 @@ def getBAFnetwork(domainName, orgsCount, orderersCount, chaincodeName, peerCount
 
 
 
-    print("BAF-network.yaml")
+
     fHandle = open("bafNetwork.yaml", "w")
     stream = yaml.dump(bafNetwork, default_flow_style = False, sort_keys=False)
     fHandle.write(stream.replace("'", ""))
@@ -1269,7 +1269,7 @@ def getCaliperValues(replicaMasterCount, replicaWorkersCount, repository, vaultU
     'nodeSelector': {}, 'affinity': {}, 'nameOverride': '', 'tolerations': [], 'imagePullSecrets': [], 'resources': {}}
 
 
-    print("Caliper-chart-values.yaml")
+
     fHandle = open("values.yaml", "w")
     stream = yaml.dump(caliperValues, default_flow_style = False, sort_keys=False)
     fHandle.write(stream.replace("'", ""))
@@ -1305,10 +1305,10 @@ def generate():
                 #    peerCounts.append(0)
             #orderersCount=(len([idx for idx in range(len(ordererOwnershipList)) if ordererOwnershipList[idx] == True]))
             orderersCount = len(np.unique(ordererOwnershipList))
-            #print(np.unique(ordererOwnershipList), orderersCount)
+            print(np.unique(ordererOwnershipList), orderersCount)
             domainName = fabricConfig["domain_name"]#"svc.cluster.local"
             endorsersList=([orgNames[idx] for idx in range(len(endorsersBooleanList)) if endorsersBooleanList[idx] == True])
-            #print(endorsersList, endorsersBooleanList, "peerCounts", peerCounts)
+            print(endorsersList, endorsersBooleanList, "peerCounts", peerCounts)
 
             BAFk8sContext = fabricConfig["BAFk8s"]["context"]
             BAFk8sConfig_file = fabricConfig["BAFk8s"]["config_file"]
