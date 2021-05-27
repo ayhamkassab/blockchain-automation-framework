@@ -1,0 +1,63 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: buyer-peer1
+  namespace: buyer-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: buyer-peer1
+  chart:
+    git: https://github.com/ayhamkassab/blockchain-automation-framework.git
+    ref: master
+    path: platforms/hyperledger-fabric/charts/peernode    
+  values:
+    metadata:
+      namespace: buyer-net
+      images:
+        couchdb: couchdb:3.1
+        peer: hyperledger/fabric-peer:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+        
+    peer:
+      name: peer1
+      gossippeeraddress: peer2.buyer-net:7051
+      gossipexternalendpoint: peer1.buyer-net:7051
+      localmspid: buyerMSP
+      loglevel: info
+      tlsstatus: true
+      builder: hyperledger/fabric-ccenv:2.2.0
+      couchdb:
+        username: buyer-user
+
+    storage:
+      peer:
+        storageclassname: buyersc
+        storagesize: 512Mi
+      couchdb:
+        storageclassname: buyersc
+        storagesize: 1Gi
+
+    vault:
+      role: vault-role
+      address: http://130.104.229.14:30000
+      authpath: buyer-net-auth
+      secretprefix: secret/crypto/peerOrganizations/buyer-net/peers/peer1.buyer-net
+      secretambassador: secret/crypto/peerOrganizations/buyer-net/ambassador
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      secretcouchdbpass: secret/credentials/buyer-net/couchdb/buyer?user
+
+    service:
+      servicetype: ClusterIP
+      ports:
+        grpc:
+          clusteripport: 7051
+        events:
+          clusteripport: 7053
+        couchdb:
+          clusteripport: 5984
+          
+    proxy:
+      provider: none
+      external_url_suffix: develop.local.com
