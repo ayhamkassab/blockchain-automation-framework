@@ -974,11 +974,11 @@ def genCaliperPeers(domainName, orgsCount, orderersCount, peerCounts):
 
 
 
-def getCaliperConnectionProfile(domainName, orgsCount, orderersCount, chaincodeName, peerCounts, chaincodeversion, chaincode_lang, chaincode_init_function, chaincode_path, org, ordererOrg, ordererIndexCounter):
+def getCaliperConnectionProfile(domainName, orgsCount, orderersCount, chaincodeName, peerCounts, chaincodeversion, chaincode_lang, chaincode_init_function, chaincode_path, org, ordererOrg):
 
     caliperConnectionProfile = {}
     #connectionProfile = {'organizations': {'carrier-net{var OrgName}': {'peers': ['peer0.carrier-net'], 'orderers': ['orderer1.supplychain-net'], 'mspid': 'carrierMSP', 'certificateAuthorities': ['ca.carrier-net']}}, 'peers': {'peer0.carrier-net': {'url': 'grpcs://peer0.carrier-net:7051', 'tlsCACerts': {'path': 'secret/msp/tlscacerts/tlsca.pem'}}}, 'orderers': {'orderer1.supplychain-net': {'url': 'grpcs://orderer1.supplychain-net:7050', 'tlsCACerts': {'path': 'secret/msp/tlscacerts/orderer-tlsca.pem'}}}, 'name': 'test-network-carrier-net', 'certificateAuthorities': {'ca.carrier-net': {'url': 'https://ca.carrier-net:7054', 'httpOptions': {'verify': False}, 'tlsCACerts': {'path': 'secret/msp/tlscacerts/tlsca.pem'}, 'caName': 'ca.carrier-net'}}, 'channels': {'allchannel': {'peers': {'peer0.carrier-net': {'endorsingPeer': True, 'chaincodeQuery': True, 'eventSource': True, 'discover': True, 'ledgerQuery': True}}, 'orderers': ['orderer1.supplychain-net']}}, 'client': {'organization': 'carrier-net', 'connection': {'timeout': {'peer': {'endorser': '300', 'eventHub': '300', 'eventReg': '300'}, 'orderer': '300'}}}, 'version': '1.0.0'}
-    caliperConnectionProfile["channels"] = {'allchannel': {'peers': {'peer0.{}-net'.format(org): {'endorsingPeer': True, 'chaincodeQuery': True, 'eventSource': True, 'discover': True, 'ledgerQuery': True}}, 'orderers': ['orderer{}.{}-net'.format(ordererIndexCounter, ordererOrg)]}}
+    caliperConnectionProfile["channels"] = {'allchannel': {'peers': {'peer0.{}-net'.format(org): {'endorsingPeer': True, 'chaincodeQuery': True, 'eventSource': True, 'discover': True, 'ledgerQuery': True}}, 'orderers': ['orderer1.{}-net'.format(ordererOrg)]}}
     caliperConnectionProfile["name"] = "test-network-carrier-net"
     caliperConnectionProfile["version"] = "1.0.0"
     caliperConnectionProfile["client"] = {'organization': '{}-net'.format(org), 'connection': {'timeout': {'peer': {'endorser': '"300"', 'eventHub': '"300"', 'eventReg': '"300"'}, 'orderer': '"300"'}}}
@@ -986,9 +986,9 @@ def getCaliperConnectionProfile(domainName, orgsCount, orderersCount, chaincodeN
     caliperConnectionProfile["peers"] = {'peer0.{}-net'.format(org): {'url': 'grpcs://peer0.{}-net:7051'.format(org), 'tlsCACerts': {'path': 'secret/{}/msp/tlscacerts/tlsca.pem'.format(org)}}}
 
     ###########" get the ordere org of this ogr here for fabric config"
-    caliperConnectionProfile["orderers"] = {'orderer{}.{}-net'.format(ordererIndexCounter, ordererOrg): {'url': 'grpcs://orderer{}.{}-net:7050'.format(ordererIndexCounter,ordererOrg), 'tlsCACerts': {'path': 'secret/{}/msp/tlscacerts/orderer-tlsca.pem'.format(org)}}}
+    caliperConnectionProfile["orderers"] = {'orderer1.{}-net'.format(ordererOrg): {'url': 'grpcs://orderer1.{}-net:7050'.format(ordererOrg), 'tlsCACerts': {'path': 'secret/{}/msp/tlscacerts/orderer-tlsca.pem'.format(org)}}}
 
-    caliperConnectionProfile["organizations"] = {'{}-net'.format(org): {'peers': ['peer0.{}-net'.format(org)], 'orderers': ['orderer{}.{}-net'.format(ordererIndexCounter, ordererOrg)], 'mspid': '{}MSP'.format(org), 'certificateAuthorities': ['ca.{}-net'.format(org)]}}
+    caliperConnectionProfile["organizations"] = {'{}-net'.format(org): {'peers': ['peer0.{}-net'.format(org)], 'orderers': ['orderer1.{}-net'.format(ordererOrg)], 'mspid': '{}MSP'.format(org), 'certificateAuthorities': ['ca.{}-net'.format(org)]}}
     
     caliperConnectionProfile["certificateAuthorities"] = {'ca.{}-net'.format(org): {'url': 'https://ca.{}-net:7054'.format(org), 'httpOptions': {'verify': False}, 'tlsCACerts': {'path': 'secret/{}/msp/tlscacerts/tlsca.pem'.format(org)}, 'caName': 'ca.{}-net'.format(org)}}
 
@@ -1397,16 +1397,8 @@ def generate():
     getCaliperNetworkConfig(domainName, orgsCount, orderersCount, chaincodeName, peerCounts, chaincodeversion, chaincode_lang, chaincode_init_function, chaincode_path, orgNames, chaincode_init_arguments, chaincode_created, endorsersList)
 
     #for org in orgNames:
-
-    ordererIndexCounter = 0
-    for org in range(len(orgNames)):
-        if orgNames[org] in endorsersList:
-            getCaliperConnectionProfile(domainName, orgsCount, orderersCount, chaincodeName, peerCounts, chaincodeversion, chaincode_lang, chaincode_init_function, chaincode_path, orgNames[org], ordererOwnershipList[org], ordererIndexCounter)
-            ordererIndexCounter += 1
-
-
-    #for org in range(len(endorsersList)):
-    #    getCaliperConnectionProfile(domainName, orgsCount, orderersCount, chaincodeName, peerCounts, chaincodeversion, chaincode_lang, chaincode_init_function, chaincode_path, endorsersList[org], ordererOwnershipList[org])
+    for org in range(len(endorsersList)):
+        getCaliperConnectionProfile(domainName, orgsCount, orderersCount, chaincodeName, peerCounts, chaincodeversion, chaincode_lang, chaincode_init_function, chaincode_path, endorsersList[org], ordererOwnershipList[org])
 
     getBAFnetwork(domainName, orgsCount, orderersCount, chaincodeName, peerCounts, chaincodeversion, chaincode_lang, chaincode_init_function, chaincode_path, orgNames, BAFgit_protocol, BAFgit_url, BAFgitbranch, BAFgitrelease_dir, BAFgitchart_source, BAFgit_repo, BAFgitusername, BAFgitpassword, BAFgitemail, BAFgitprivate_key, BAFk8sContext, BAFk8sConfig_file, vaultUrl, vaultRootToken, endorsersList, ordererOwnershipList, pathToBAF, BAFChaincodePath, cloud_provider)
 
