@@ -1,18 +1,14 @@
-echo "Creating configuration files"
+#!/bin/bash
+set -e
 
-cd ourAutomation
-./generateCaliperConfig.sh 
+echo "Starting build process..."
 
-echo "Configuration files created."
+echo "Adding env variables..."
+export PATH=/root/bin:$PATH
+
+#Path to k8s config file
+KUBECONFIG=/home/blockchain-automation-framework/build/config
 
 
-echo "Deploying the network"
-
-
-cd ..
-
-export PATH=~/bin:$PATH
-export VAULT_ADDR='http://130.104.229.14:30000'
-export VAULT_TOKEN="s.5KkfEk3Upun8A1fQr1PfjRWL"
-
-exec ansible-playbook  /root/hyperledger-labs/myFork/blockchain-automation-framework/platforms/shared/configuration/site.yaml -e "@/root/hyperledger-labs/myFork/blockchain-automation-framework/ourAutomation/bafNetwork.yaml" -i inventory.ini
+echo "Running the playbook..."
+exec ansible-playbook -vv /home/blockchain-automation-framework/platforms/shared/configuration/site.yaml --inventory-file=/home/blockchain-automation-framework/platforms/shared/inventory/ -e "@/home/blockchain-automation-framework/build/network.yaml" -e 'ansible_python_interpreter=/usr/bin/python3'
