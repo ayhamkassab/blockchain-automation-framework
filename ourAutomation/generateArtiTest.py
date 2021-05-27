@@ -1086,7 +1086,7 @@ pathToBAF, chaincodeversion, chaincodeName, BAFChaincodePath, cloud_provider):
 
 
             'orderers': [{'consensus': 'kafka', 'grpc': {'port': 7050}, 'orderer': '', 'type': 'orderer',
-            'name': 'orderer{}'.format(x)} for x in range(peerCounts[orgNames.index(ordererOwnershipList[org])])]},
+            'name': 'orderer1'}]},
             
             'k8s': {'region': '"cluster_region"', 'config_file': '"{}"'.format(BAFk8sConfig_file), 'context': '"{}"'.format(BAFk8sContext)},
             'cli': 'disabled',
@@ -1117,17 +1117,16 @@ pathToBAF, chaincodeversion, chaincodeName, BAFChaincodePath, cloud_provider):
     return config
 
 
-def genBAFOrderers(ordererOwnershipList, pathToBAF, peerCounts, orgNames):
+def genBAFOrderers(orgNames, pathToBAF):
     config = []
     used = []
-    for org in range(len(ordererOwnershipList)):
-        if ordererOwnershipList[org] not in used:
-            for orderer in range(peerCounts[orgNames.index(ordererOwnershipList[org])]):
-                ordererConfig={'org_name': ordererOwnershipList[org], 'orderer': '', 'name': 'orderer{}'.format(orderer),
-                    'certificate': '{}/build/{}/orderer{}.crt'.format(pathToBAF, ordererOwnershipList[org], orderer), 'type': 'orderer',
-                    'uri': 'orderer{}.{}-net:7050'.format(orderer, ordererOwnershipList[org])}
-                config.append(ordererConfig)
-                used.append(ordererOwnershipList[org])
+    for org in orgNames:
+        if org not in used:
+            ordererConfig={'org_name': org, 'orderer': '', 'name': 'orderer1',
+                'certificate': '{}/build/{}/orderer1.crt'.format(pathToBAF, org), 'type': 'orderer',
+                'uri': 'orderer1.{}-net:7050'.format(org)}
+            config.append(ordererConfig)
+            used.append(org)
     return config
 
 def TOUSEEEEchannelParticipantsList(orgNames):
@@ -1152,11 +1151,11 @@ def TOUSEEEEchannelParticipantsList(orgNames):
 
 def channelParticipantsList(orgNames, ordererOwnershipList, peerCounts, endorsersList):
     config = []
-    ordererIndexCounter = 0
+
     for org in range(len(orgNames)):
         if orgNames[org] in endorsersList:
             a = [1,2,3]
-            orgConfig = {'ordererAddress': 'orderer{}.{}-net:7050'.format(ordererIndexCounter, ordererOwnershipList[org]),
+            orgConfig = {'ordererAddress': 'orderer1.{}-net:7050'.format(ordererOwnershipList[org]),
             'peers': [{'peer': '', 'gossipAddress': 'peer{}.{}-net:7051'.format((x+1) % peerCounts[org], orgNames[org]),
             'name': 'peer{}'.format(x), 'peerAddress': 'peer{}.{}-net:7051'.format(x , orgNames[org])} for x in range(peerCounts[org])],
             'name': orgNames[org], 'organization': '', 'org_status': 'new'}
@@ -1167,7 +1166,6 @@ def channelParticipantsList(orgNames, ordererOwnershipList, peerCounts, endorser
             else:
                 orgConfig["type"] = "joiner"
             config.append(orgConfig)
-            ordererIndexCounter += 1
     return config
 
 
@@ -1195,7 +1193,7 @@ def getBAFnetwork(domainName, orgsCount, orderersCount, chaincodeName, peerCount
 
 
 
-    'version': '2.2.0', 'orderers': genBAFOrderers(ordererOwnershipList, pathToBAF, peerCounts, orgNames), 'env': {'retry_count': 50, 'type': '"local"', 'proxy': 'none',
+    'version': '2.2.0', 'orderers': genBAFOrderers(ordererOwnershipList, pathToBAF), 'env': {'retry_count': 50, 'type': '"local"', 'proxy': 'none',
     'ambassadorPorts': '15010,15020', 'external_dns': 'disabled'}, 'docker': {'url': '"index.docker.io/hyperledgerlabs"',
     'username': '"docker_username"', 'password': '"docker_password"'}, 'type': 'fabric'}}
 
@@ -1298,11 +1296,10 @@ def generate():
                 ordererOwnershipList.append(listOfOrgs[org]["orderer"])
                 orgNames.append(listOfOrgs[org]["name"])
                 endorsersBooleanList.append(listOfOrgs[org]["endorser"])
-                peerCounts.append(listOfOrgs[org]["numberOfPeers"])
-                #if listOfOrgs[org]["endorser"]:
-                #    peerCounts.append(listOfOrgs[org]["numberOfPeers"])
-                #else:
-                #    peerCounts.append(0)
+                if listOfOrgs[org]["endorser"]:
+                    peerCounts.append(listOfOrgs[org]["numberOfPeers"])
+                else:
+                    peerCounts.append(0)
             #orderersCount=(len([idx for idx in range(len(ordererOwnershipList)) if ordererOwnershipList[idx] == True]))
             orderersCount = len(np.unique(ordererOwnershipList))
             print(np.unique(ordererOwnershipList), orderersCount)

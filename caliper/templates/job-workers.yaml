@@ -132,9 +132,6 @@ spec:
             mountPath: /hyperledger/caliper/workspace/manufacturerConnectionProfile.yaml
             subPath: manufacturerConnectionProfile.yaml
           - name: {{ include "caliper.fullname" . }}--yaml-config
-            mountPath: /hyperledger/caliper/workspace/buyerConnectionProfile.yaml
-            subPath: buyerConnectionProfile.yaml
-          - name: {{ include "caliper.fullname" . }}--yaml-config
             mountPath: /hyperledger/caliper/workspace/caliper.yaml
             subPath: caliper.yaml
           - name: {{ include "caliper.fullname" . }}--yaml-config

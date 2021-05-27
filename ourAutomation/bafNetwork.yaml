@@ -395,21 +395,9 @@ network:
     name: supplychain
   orderers:
   - org_name: supplychain
-    name: orderer0
-    certificate: /root/hyperledger-labs/myFork/blockchain-automation-framework/build/supplychain/orderer0.crt
-    uri: orderer0.supplychain-net:7050
-    orderer: 
-    type: orderer
-  - org_name: supplychain
     name: orderer1
     certificate: /root/hyperledger-labs/myFork/blockchain-automation-framework/build/supplychain/orderer1.crt
     uri: orderer1.supplychain-net:7050
-    orderer: 
-    type: orderer
-  - org_name: supplychain
-    name: orderer2
-    certificate: /root/hyperledger-labs/myFork/blockchain-automation-framework/build/supplychain/orderer2.crt
-    uri: orderer2.supplychain-net:7050
     orderer: 
     type: orderer
   channels:
