@@ -1,0 +1,28 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: buyer-net-ca-tools
+  namespace: buyer-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: buyer-net-ca-tools
+  chart:
+    git: https://github.com/ayhamkassab/blockchain-automation-framework.git
+    ref: master
+    path: platforms/hyperledger-fabric/charts/catools
+  values:
+    metadata:
+      namespace: buyer-net
+      name: ca-tools
+
+    replicaCount: 1
+
+    image:
+      repository: hyperledger/fabric-ca-tools
+      tag: 1.2.1
+      pullPolicy: IfNotPresent
+      
+    storage:
+      storageclassname: buyersc
+      storagesize: 512Mi
