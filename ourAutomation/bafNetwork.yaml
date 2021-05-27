@@ -385,19 +385,7 @@ network:
           port: 7050
         orderer: 
         type: orderer
-        name: orderer0
-      - consensus: kafka
-        grpc:
-          port: 7050
-        orderer: 
-        type: orderer
         name: orderer1
-      - consensus: kafka
-        grpc:
-          port: 7050
-        orderer: 
-        type: orderer
-        name: orderer2
     organization: 
     k8s:
       region: "cluster_region"
@@ -437,7 +425,7 @@ network:
         peerAddress: peer1.carrier-net:7051
       name: carrier
       org_status: new
-      ordererAddress: orderer0.supplychain-net:7050
+      ordererAddress: orderer1.supplychain-net:7050
       organization: 
       type: creator
     - peers:
@@ -469,7 +457,7 @@ network:
         peerAddress: peer3.buyer-net:7051
       name: buyer
       org_status: new
-      ordererAddress: orderer2.supplychain-net:7050
+      ordererAddress: orderer1.supplychain-net:7050
       organization: 
       type: joiner
     consortium: SupplyChainConsortium
