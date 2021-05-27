@@ -1,0 +1,41 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: joinchannel-peer2-join-allchannel-buyer-peer2
+  namespace: buyer-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: joinchannel-peer2-join-allchannel-buyer-peer2
+  chart:
+    git: https://github.com/ayhamkassab/blockchain-automation-framework.git
+    ref: master
+    path: platforms/hyperledger-fabric/charts/join_channel
+  values:
+    metadata:
+      namespace: buyer-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+
+    peer:
+      name: peer2
+      address: peer2.buyer-net:7051
+      localmspid: buyerMSP
+      loglevel: debug
+      tlsstatus: true
+
+    vault:
+      role: vault-role
+      address: http://130.104.229.14:30000
+      authpath: buyer-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/buyer-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/buyer-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+
+    channel:
+      name: allchannel      
+    orderer:
+      address: orderer2.supplychain-net:7050
+
