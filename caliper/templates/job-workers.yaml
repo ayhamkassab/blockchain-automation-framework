@@ -7,7 +7,7 @@ metadata:
 spec:
   parallelism: {{ .Values.replicaWorkersCount }}
   backoffLimit: 0
-  ttlSecondsAfterFinished: 30
+  ttlSecondsAfterFinished: 300
   template:
     metadata:
       labels:
@@ -110,7 +110,8 @@ spec:
       containers:
       - name: {{ .Chart.Name }}-worker
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        args: [launch,worker]
+        command: ["/bin/sh", "-c", "--"]
+        args: ["caliper launch worker; ./mc  alias set minio http://myminio.default:9000 minio minio123; ./mc cp /results/* minio/testbucket/caliperrRsults/"]
         imagePullPolicy: {{ .Values.image.pullPolicy }}        
         volumeMounts:
           - name: caliper--yaml-config
@@ -142,6 +143,8 @@ spec:
             subPath: simpleAuction.go
           - name: certificates
             mountPath: /hyperledger/caliper/workspace/secret
+          - name: csvvolume
+            mountPath: /results
         env:
         - name: CALIPER_BIND_SUT
           value: fabric:2.1.0
@@ -163,6 +166,9 @@ spec:
       - name: caliper--yaml-config
         configMap:
           name: caliper--yaml-config
-          defaultMode: 0744 
+          defaultMode: 0744
       - name: certificates
         emptyDir: {}
+      - name: csvvolume
+        emptyDir: {}
+
